@@ -299,7 +299,7 @@ function VinylLogger() {
                 </div>
               </div>
             </div>
-            <input ref={fileRef} type="file" accept="image/*" capture="environment"
+            <input ref={fileRef} type="file" accept="image/*"
               style={{ display: 'none' }}
               onChange={e => scan(e.target.files[0])} />
           </>
