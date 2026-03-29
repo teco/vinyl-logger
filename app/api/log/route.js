@@ -1,4 +1,4 @@
-const NOTION_DS_ID = 'eddaa462-9b65-4d29-a072-efc39d743bae';
+const NOTION_DB_ID = '3c079b18f4574ec6a35e446b146d60a3';
 
 export async function POST(req) {
   const { title, artist, format, genres } = await req.json();
@@ -7,7 +7,9 @@ export async function POST(req) {
     Title: { title: [{ text: { content: title } }] },
     Artist: { rich_text: [{ text: { content: artist } }] },
     Format: { select: { name: format } },
-    Genre: { multi_select: genres.map(g => ({ name: g })) },
+    ...(genres?.trim() && {
+      Genre: { rich_text: [{ text: { content: genres.trim() } }] },
+    }),
   };
 
   const response = await fetch('https://api.notion.com/v1/pages', {
@@ -18,9 +20,9 @@ export async function POST(req) {
       'Notion-Version': '2022-06-28',
     },
     body: JSON.stringify({
-      parent: { database_id: NOTION_DS_ID },
+      parent: { database_id: NOTION_DB_ID },
       properties,
-    })
+    }),
   });
 
   const data = await response.json();

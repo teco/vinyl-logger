@@ -2,39 +2,38 @@
 
 import { useState, useRef, useCallback } from 'react';
 
-const GENRES = ['Jazz', 'Rock', 'Electronic', 'Classical', 'Soul/R&B', 'Hip-Hop', 'Pop', 'Folk', 'World', 'Blues', 'Experimental'];
 const SUPPORTED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
 const c = {
-  bg:        '#0e0d0c',
-  surface:   '#161412',
-  border:    '#272420',
-  text:      '#ede5d8',
-  muted:     '#6a6158',
-  faint:     '#312d29',
-  accent:    '#c8914a',
-  accentDim: '#1f1a14',
+  bg:        '#0B1120',
+  surface:   '#1e2d42',
+  border:    '#2a3f5c',
+  text:      '#F1F5F9',
+  muted:     '#7a9bb5',
+  accent:    '#5ce0d6',
+  accentDim: '#0d2a35',
+  gold:      '#e0a050',
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: ${c.bg}; }
-  input, button { font-family: inherit; }
-  input::placeholder { color: ${c.faint}; }
+  body { background: ${c.bg}; font-family: 'Inter', sans-serif; }
+  input, button { font-family: 'Inter', sans-serif; }
+  input::placeholder { color: ${c.border}; }
   input:focus { outline: none; }
   @keyframes spin  { to { transform: rotate(360deg); } }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
   .drop-zone:hover  { border-color: ${c.accent} !important; }
   .btn-primary:hover   { opacity: .82; }
   .btn-secondary:hover { border-color: ${c.muted} !important; color: ${c.text} !important; }
-  .genre-tag:hover  { border-color: ${c.accent} !important; color: ${c.accent} !important; }
   .format-btn:hover { border-color: ${c.accent} !important; }
 `;
 
 const Field = ({ label, children }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-    <span style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: c.muted, fontFamily: '"DM Mono", monospace' }}>
+    <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
+      color: c.muted, fontWeight: 500 }}>
       {label}
     </span>
     {children}
@@ -42,13 +41,15 @@ const Field = ({ label, children }) => (
 );
 
 const Spinner = () => (
-  <div style={{ width: 28, height: 28, border: `1px solid ${c.border}`, borderTop: `1px solid ${c.accent}`,
-    borderRadius: '50%', animation: 'spin .8s linear infinite', margin: '0 auto' }} />
+  <div style={{ width: 28, height: 28, border: `1px solid ${c.border}`,
+    borderTop: `1px solid ${c.accent}`, borderRadius: '50%',
+    animation: 'spin .8s linear infinite', margin: '0 auto' }} />
 );
 
 const Dot = () => (
-  <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: c.accent,
-    animation: 'blink 1.2s ease-in-out infinite', marginRight: 8, verticalAlign: 'middle' }} />
+  <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
+    background: c.accent, animation: 'blink 1.2s ease-in-out infinite',
+    marginRight: 8, verticalAlign: 'middle' }} />
 );
 
 const Header = () => (
@@ -56,15 +57,14 @@ const Header = () => (
     padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       <span style={{ width: 7, height: 7, borderRadius: '50%', background: c.accent, display: 'inline-block' }} />
-      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: c.muted }}>
+      <span style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
+        color: c.muted, fontWeight: 500 }}>
         Vinyl Logger
       </span>
     </div>
-    <span style={{ fontSize: 9, color: c.faint, letterSpacing: '0.08em' }}>Personal OS</span>
+    <span style={{ fontSize: 10, color: c.muted }}>Personal OS</span>
   </div>
 );
-
-// ── Password gate ──────────────────────────────────────────────────────────────
 
 function PasswordGate({ onUnlock }) {
   const [value, setValue] = useState('');
@@ -80,11 +80,11 @@ function PasswordGate({ onUnlock }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: c.bg, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ minHeight: '100vh', background: c.bg, display: 'flex',
+      flexDirection: 'column', alignItems: 'center' }}>
       <Header />
       <div style={{ width: '100%', maxWidth: 400, padding: '80px 24px' }}>
-        <div style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 26, fontWeight: 300,
-          color: c.text, marginBottom: 32 }}>
+        <div style={{ fontSize: 22, fontWeight: 300, color: c.text, marginBottom: 32 }}>
           Access
         </div>
         <input
@@ -93,19 +93,20 @@ function PasswordGate({ onUnlock }) {
           value={value}
           onChange={e => { setValue(e.target.value); setError(false); }}
           onKeyDown={e => e.key === 'Enter' && attempt()}
-          style={{ background: 'transparent', border: 'none', borderBottom: `1px solid ${error ? c.accent : c.border}`,
-            color: c.text, fontFamily: '"DM Mono", monospace', fontSize: 13,
-            padding: '8px 0', width: '100%', marginBottom: 24 }}
+          style={{ background: 'transparent', border: 'none',
+            borderBottom: `1px solid ${error ? c.gold : c.border}`,
+            color: c.text, fontSize: 14, padding: '8px 0',
+            width: '100%', marginBottom: 24 }}
         />
         {error && (
-          <div style={{ fontSize: 10, color: c.accent, marginBottom: 16, letterSpacing: '0.08em' }}>
+          <div style={{ fontSize: 12, color: c.gold, marginBottom: 16 }}>
             Incorrect password.
           </div>
         )}
         <button onClick={attempt} style={{
           width: '100%', padding: '13px', background: c.accent, color: c.bg,
-          border: 'none', borderRadius: 2, fontSize: 10, letterSpacing: '0.18em',
-          textTransform: 'uppercase', cursor: 'pointer',
+          border: 'none', borderRadius: 2, fontSize: 12, letterSpacing: '0.1em',
+          textTransform: 'uppercase', fontWeight: 500, cursor: 'pointer',
         }}>
           Enter
         </button>
@@ -114,14 +115,12 @@ function PasswordGate({ onUnlock }) {
   );
 }
 
-// ── Main logger ────────────────────────────────────────────────────────────────
-
 function VinylLogger() {
-  const [phase, setPhase]       = useState('idle');
-  const [preview, setPreview]   = useState(null);
-  const [form, setForm]         = useState({ title: '', artist: '', format: 'LP' });
-  const [genres, setGenres]     = useState([]);
-  const [errMsg, setErrMsg]     = useState('');
+  const [phase, setPhase]     = useState('idle');
+  const [preview, setPreview] = useState(null);
+  const [form, setForm]       = useState({ title: '', artist: '', format: 'LP' });
+  const [genres, setGenres]   = useState('');
+  const [errMsg, setErrMsg]   = useState('');
   const fileRef = useRef(null);
 
   const toB64 = file => new Promise((res, rej) => {
@@ -135,7 +134,7 @@ function VinylLogger() {
     if (!file) return;
     const mimeType = SUPPORTED_TYPES.includes(file.type) ? file.type : 'image/jpeg';
     setPreview(URL.createObjectURL(file));
-    setGenres([]);
+    setGenres('');
     setPhase('scanning');
 
     try {
@@ -151,7 +150,8 @@ function VinylLogger() {
         setForm({ title: '', artist: '', format: 'LP' });
         setPhase('fallback');
       } else {
-        setForm({ title: result.title, artist: result.artist || '', format: result.format === 'CD' ? 'CD' : 'LP' });
+        setForm({ title: result.title, artist: result.artist || '',
+          format: result.format === 'CD' ? 'CD' : 'LP' });
         setPhase('confirm');
       }
     } catch {
@@ -164,9 +164,6 @@ function VinylLogger() {
     e.preventDefault();
     scan(e.dataTransfer.files[0]);
   }, []);
-
-  const toggleGenre = g =>
-    setGenres(prev => prev.includes(g) ? prev.filter(x => x !== g) : [...prev, g]);
 
   const logToNotion = async () => {
     if (!form.title.trim() || !form.artist.trim()) return;
@@ -192,21 +189,20 @@ function VinylLogger() {
   const reset = () => {
     setPhase('idle'); setPreview(null);
     setForm({ title: '', artist: '', format: 'LP' });
-    setGenres([]); setErrMsg('');
+    setGenres(''); setErrMsg('');
   };
 
   const canSubmit = form.title.trim() && form.artist.trim();
 
   const inputStyle = {
-    background: 'transparent', border: 'none', borderBottom: `1px solid ${c.border}`,
-    color: c.text, fontFamily: '"DM Mono", monospace', fontSize: 13,
-    padding: '8px 0', width: '100%',
+    background: 'transparent', border: 'none',
+    borderBottom: `1px solid ${c.border}`,
+    color: c.text, fontSize: 14, padding: '8px 0', width: '100%',
   };
 
   const titleInputStyle = {
     ...inputStyle,
-    fontFamily: '"Cormorant Garamond", Georgia, serif',
-    fontSize: 26, fontWeight: 300,
+    fontSize: 22, fontWeight: 300,
   };
 
   const fmtBtn = active => ({
@@ -214,17 +210,8 @@ function VinylLogger() {
     border: `1px solid ${active ? c.accent : c.border}`,
     background: active ? c.accentDim : 'transparent',
     color: active ? c.accent : c.muted,
-    fontFamily: '"DM Mono", monospace', fontSize: 10,
-    letterSpacing: '0.14em', cursor: 'pointer', borderRadius: 2, transition: 'all .15s',
-  });
-
-  const genreTag = active => ({
-    padding: '5px 12px',
-    border: `1px solid ${active ? c.accent : c.border}`,
-    background: active ? c.accentDim : 'transparent',
-    color: active ? c.accent : c.muted,
-    fontFamily: '"DM Mono", monospace', fontSize: 10,
-    letterSpacing: '0.08em', cursor: 'pointer', borderRadius: 2, transition: 'all .12s',
+    fontSize: 12, fontWeight: 500,
+    letterSpacing: '0.08em', cursor: 'pointer', borderRadius: 2, transition: 'all .15s',
   });
 
   const FormFields = () => (
@@ -248,15 +235,9 @@ function VinylLogger() {
         </div>
       </Field>
       <div style={{ borderTop: `1px solid ${c.border}`, paddingTop: 20 }}>
-        <Field label="Genre — select all that apply">
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
-            {GENRES.map(g => (
-              <button key={g} className="genre-tag" style={genreTag(genres.includes(g))}
-                onClick={() => toggleGenre(g)}>
-                {g}
-              </button>
-            ))}
-          </div>
+        <Field label="Genre">
+          <input style={inputStyle} value={genres} placeholder="e.g. Rock, Folk"
+            onChange={e => setGenres(e.target.value)} />
         </Field>
       </div>
     </>
@@ -265,7 +246,7 @@ function VinylLogger() {
   const Notice = ({ text }) => (
     <div style={{ background: c.surface, border: `1px solid ${c.border}`,
       borderLeft: `2px solid ${c.accent}`, padding: '10px 14px', borderRadius: 2,
-      fontSize: 10, color: c.muted, lineHeight: 1.6, marginBottom: 24 }}>
+      fontSize: 12, color: c.muted, lineHeight: 1.6, marginBottom: 24 }}>
       {text}
     </div>
   );
@@ -273,8 +254,9 @@ function VinylLogger() {
   const PrimaryBtn = ({ label, onClick, disabled }) => (
     <button className="btn-primary" disabled={disabled} onClick={onClick} style={{
       width: '100%', marginTop: 28, padding: '13px', background: c.accent, color: c.bg,
-      border: 'none', borderRadius: 2, fontSize: 10, letterSpacing: '0.18em',
-      textTransform: 'uppercase', cursor: disabled ? 'not-allowed' : 'pointer',
+      border: 'none', borderRadius: 2, fontSize: 12, letterSpacing: '0.1em',
+      textTransform: 'uppercase', fontWeight: 500,
+      cursor: disabled ? 'not-allowed' : 'pointer',
       opacity: disabled ? 0.35 : 1, transition: 'opacity .15s',
     }}>{label}</button>
   );
@@ -283,14 +265,14 @@ function VinylLogger() {
     <button className="btn-secondary" onClick={onClick} style={{
       width: '100%', marginTop: 10, padding: '11px', background: 'transparent',
       color: c.muted, border: `1px solid ${c.border}`, borderRadius: 2,
-      fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
+      fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase',
       cursor: 'pointer', transition: 'all .15s',
     }}>{label}</button>
   );
 
   return (
     <div style={{ minHeight: '100vh', background: c.bg, color: c.text,
-      fontFamily: '"DM Mono", monospace', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Header />
       <div style={{ width: '100%', maxWidth: 400, padding: '32px 24px 48px' }}>
 
@@ -305,13 +287,14 @@ function VinylLogger() {
               onDrop={handleDrop}
               onDragOver={e => e.preventDefault()}
             >
-              <div style={{ width: 52, height: 52, borderRadius: '50%', border: `1px solid ${c.border}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, color: c.muted }}>
+              <div style={{ width: 52, height: 52, borderRadius: '50%',
+                border: `1px solid ${c.border}`, display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontSize: 22, color: c.muted }}>
                 ⬡
               </div>
               <div>
-                <div style={{ fontSize: 13, color: c.text, marginBottom: 6 }}>Photograph a cover</div>
-                <div style={{ fontSize: 10, color: c.muted, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: 14, color: c.text, marginBottom: 6 }}>Photograph a cover</div>
+                <div style={{ fontSize: 11, color: c.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                   or drag & drop
                 </div>
               </div>
@@ -327,7 +310,7 @@ function VinylLogger() {
             {preview && <img src={preview} alt="cover"
               style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 2, display: 'block' }} />}
             <div style={{ textAlign: 'center', marginTop: 20 }}>
-              <div style={{ fontSize: 10, color: c.muted, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: 12, color: c.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 <Dot />Identifying cover...
               </div>
             </div>
@@ -337,7 +320,8 @@ function VinylLogger() {
         {phase === 'confirm' && (
           <>
             {preview && <img src={preview} alt="cover"
-              style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 2, display: 'block', marginBottom: 28 }} />}
+              style={{ width: '100%', aspectRatio: '1', objectFit: 'cover',
+                borderRadius: 2, display: 'block', marginBottom: 28 }} />}
             <Notice text="Identified — confirm or correct before logging." />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}><FormFields /></div>
             <PrimaryBtn label="Log to Notion" onClick={logToNotion} disabled={!canSubmit} />
@@ -360,8 +344,8 @@ function VinylLogger() {
         {phase === 'logging' && (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
             <Spinner />
-            <div style={{ marginTop: 20, fontSize: 10, color: c.muted,
-              letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+            <div style={{ marginTop: 20, fontSize: 12, color: c.muted,
+              letterSpacing: '0.08em', textTransform: 'uppercase' }}>
               Writing to Notion...
             </div>
           </div>
@@ -369,20 +353,19 @@ function VinylLogger() {
 
         {phase === 'success' && (
           <div style={{ textAlign: 'center', padding: '52px 0' }}>
-            <div style={{ width: 48, height: 48, borderRadius: '50%', border: `1px solid ${c.accent}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              margin: '0 auto 24px', fontSize: 18, color: c.accent }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%',
+              border: `1px solid ${c.accent}`, display: 'flex', alignItems: 'center',
+              justifyContent: 'center', margin: '0 auto 24px', fontSize: 18, color: c.accent }}>
               ✓
             </div>
-            <div style={{ fontFamily: '"Cormorant Garamond", Georgia, serif',
-              fontSize: 26, fontWeight: 300, color: c.text, marginBottom: 6 }}>
+            <div style={{ fontSize: 20, fontWeight: 400, color: c.text, marginBottom: 6 }}>
               {form.title}
             </div>
-            <div style={{ fontSize: 11, color: c.muted, marginBottom: 4 }}>{form.artist}</div>
-            <div style={{ fontSize: 10, color: c.faint, letterSpacing: '0.1em', marginBottom: 28 }}>
-              {form.format}{genres.length ? ` · ${genres.join(', ')}` : ''}
+            <div style={{ fontSize: 14, color: c.muted, marginBottom: 4 }}>{form.artist}</div>
+            <div style={{ fontSize: 12, color: c.muted, marginBottom: 28 }}>
+              {form.format}{genres ? ` · ${genres}` : ''}
             </div>
-            <div style={{ fontSize: 10, color: c.muted, letterSpacing: '0.1em',
+            <div style={{ fontSize: 11, color: c.muted, letterSpacing: '0.08em',
               textTransform: 'uppercase', marginBottom: 32 }}>
               Logged to Notion
             </div>
@@ -392,7 +375,7 @@ function VinylLogger() {
 
         {phase === 'error' && (
           <div style={{ textAlign: 'center', padding: '52px 0' }}>
-            <div style={{ fontSize: 11, color: c.accent, marginBottom: 24, lineHeight: 1.6 }}>{errMsg}</div>
+            <div style={{ fontSize: 13, color: c.gold, marginBottom: 24, lineHeight: 1.6 }}>{errMsg}</div>
             <SecondaryBtn label="Retry" onClick={() => setPhase(form.title ? 'confirm' : 'fallback')} />
             <SecondaryBtn label="Start over" onClick={reset} />
           </div>
@@ -403,12 +386,9 @@ function VinylLogger() {
   );
 }
 
-// ── Root ───────────────────────────────────────────────────────────────────────
-
 export default function Page() {
   const [unlocked, setUnlocked] = useState(false);
 
-  // If no password is set, skip the gate entirely
   if (!process.env.NEXT_PUBLIC_APP_PASSWORD) {
     return <><style>{css}</style><VinylLogger /></>;
   }
