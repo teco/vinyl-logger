@@ -214,8 +214,8 @@ function VinylLogger() {
     letterSpacing: '0.08em', cursor: 'pointer', borderRadius: 2, transition: 'all .15s',
   });
 
-  const FormFields = () => (
-    <>
+  const fields = (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
       <Field label="Title">
         <input style={titleInputStyle} value={form.title} placeholder="Album title"
           onChange={e => setForm(p => ({ ...p, title: e.target.value }))} />
@@ -240,7 +240,7 @@ function VinylLogger() {
             onChange={e => setGenres(e.target.value)} />
         </Field>
       </div>
-    </>
+    </div>
   );
 
   const Notice = ({ text }) => (
@@ -323,7 +323,7 @@ function VinylLogger() {
               style={{ width: '100%', aspectRatio: '1', objectFit: 'cover',
                 borderRadius: 2, display: 'block', marginBottom: 28 }} />}
             <Notice text="Identified — confirm or correct before logging." />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}><FormFields /></div>
+            {fields}
             <PrimaryBtn label="Log to Notion" onClick={logToNotion} disabled={!canSubmit} />
             <SecondaryBtn label="Start over" onClick={reset} />
           </>
@@ -335,7 +335,7 @@ function VinylLogger() {
               style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 2,
                 display: 'block', opacity: .45, marginBottom: 16 }} />}
             <Notice text="Could not identify this cover reliably. Please fill in the details below." />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}><FormFields /></div>
+            {fields}
             <PrimaryBtn label="Log to Notion" onClick={logToNotion} disabled={!canSubmit} />
             <SecondaryBtn label="Start over" onClick={reset} />
           </>
